@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { createSwaggerDocs } from './swagger';
 
 async function bootstrap() {
 
@@ -9,13 +10,9 @@ async function bootstrap() {
 
   app.enable('trust proxy');  // get user's real IP
 
-  const config = new DocumentBuilder()
-    .setTitle('Sunnatillo Sharipov')
-    .setDescription('19 y.o Node.js backend developer')
-    .setVersion('19v')
-    .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  const [ adminDoc, usersDoc ] = createSwaggerDocs(app);
+  SwaggerModule.setup('admin-docs', app, adminDoc);
+  SwaggerModule.setup('users-docs', app, usersDoc);
 
   await app.listen(process.env.PORT ?? 3000);
 
