@@ -1,6 +1,13 @@
-import { Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { AuthService } from "./auth.service";
+import { SignUpDto } from "./dto/sign-up.dto";
+import { ISignUpReq } from "./interfaces/sign-up.interface";
+import { SignInDto } from "./dto/sign-in.dto";
+import { ISignInReq } from "./interfaces/sign-in.interface";
+import { RefreshTokenDto } from "./dto/refresh-token.dto";
+import { ApiTags } from "@nestjs/swagger";
 
+@ApiTags("auth")
 @Controller("auth")
 export class AuthController {
 
@@ -9,22 +16,38 @@ export class AuthController {
     ) {}
 
     @Post("sign-up")
-    signUp() {
+    signUp(@Body() body: SignUpDto) {
+
+        const reqData: ISignUpReq = {
+            ...body
+        };
+
+        return this.authService.signUp(reqData);
 
     }
 
     @Post("sign-in")
-    signIn() {
+    signIn(@Body() body: SignInDto) {
+
+        const reqData: ISignInReq = {
+            ...body
+        };
+
+        return this.authService.signIn(reqData);
 
     }
 
     @Post("log-out")
     logOut() {
 
+        return this.authService.logOut({});
+
     }
 
     @Get("refresh-token")
-    refreshToken() {
+    refreshToken(@Body() body: RefreshTokenDto) {
+
+        return this.authService.refreshToken(body);
 
     }
 

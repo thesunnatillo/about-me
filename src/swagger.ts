@@ -1,5 +1,5 @@
 import { INestApplication } from "@nestjs/common";
-import { DocumentBuilder, OpenAPIObject, SwaggerModule } from "@nestjs/swagger";
+import { DocumentBuilder, OpenAPIObject, SwaggerCustomOptions, SwaggerDocumentOptions, SwaggerModule } from "@nestjs/swagger";
 import { AuthModule } from "./modules/users/auth/auth.module";
 import { AppModule } from "./app.module";
 
@@ -35,3 +35,10 @@ export function createSwaggerDocs(app: INestApplication): OpenAPIObject[] {
     return [adminDoc, usersDoc];
 
 }
+
+export const swaggerOptions: SwaggerCustomOptions = {
+    swaggerOptions: {
+      defaultModelsExpandDepth: -1,
+      docExpansion: "none",
+    }
+};

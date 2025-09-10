@@ -2,19 +2,22 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { createSwaggerDocs } from './swagger';
+import { createSwaggerDocs, swaggerOptions } from './swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  app.useGlobalPipes(new ValidationPipe());
+
   app.enable('trust proxy');  // get user's real IP
 
   const [ adminDoc, usersDoc ] = createSwaggerDocs(app);
-  SwaggerModule.setup('admin-docs', app, adminDoc);
-  SwaggerModule.setup('users-docs', app, usersDoc);
+  SwaggerModule.setup('admin-docs', app, adminDoc, swaggerOptions);
+  SwaggerModule.setup('users-docs', app, usersDoc, swaggerOptions);
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3001);
 
 }
 
