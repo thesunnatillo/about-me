@@ -10,6 +10,9 @@ import { DataSourceOptions } from 'typeorm';
 import { UsersModule } from './modules/users/users.module';
 import { PostsEntity } from './db/entities/posts.entity';
 import jwtConfig from './configs/jwt.config';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './guards/jwt.guard';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -33,7 +36,14 @@ import jwtConfig from './configs/jwt.config';
     UsersModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    JwtService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    }
+  ],
 })
 export class AppModule implements NestModule {
 

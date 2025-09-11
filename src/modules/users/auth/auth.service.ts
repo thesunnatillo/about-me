@@ -30,7 +30,7 @@ export class AuthService {
 
         if (data.password !== data.confirmPassword) {
 
-            return { data: null, errMsg: "Parollar bir-birga mos emas!" };
+            return { data: null, errMsg: "Parollar bir-biriga mos emas!" };
 
         }
 
@@ -57,13 +57,41 @@ export class AuthService {
 
     }
 
-    signIn(data: ISignInReq) {
+    async signIn(data: ISignInReq): Promise<GlobalResponse<ITokens>>  {
 
-        return "SignIn";
+        const { login, password } = data;
+
+        const user = await UsersEntity.findOneBy({ login });
+
+        if (!user) {
+
+            return { data: null, errMsg: "Login yoki parol xato!" };
+
+        }
+
+        const matchPass = await bcrypt.compare(password, user.password);
+
+        if (!matchPass) {
+
+            return { data: null, errMsg: "Login yoki parol xato!" };
+
+        }
+
+        const payload: TokenPayload = {
+            id: user.id,
+            fn: user.fn,
+            ln: user.ln,
+            login: user.login,
+            role: user.role,
+        };        
+
+        const { accsessToken, refreshToken } = await this.getTokens(payload);
+
+        return { data: { accsessToken, refreshToken }};
 
     }
 
-    logOut(data: IEmpty) {
+    logOut(data: IEmpty): any {
 
         return "LogOut";
 

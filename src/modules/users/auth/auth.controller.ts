@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post, Request } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { SignUpDto } from "./dto/sign-up.dto";
 import { ISignUpReq } from "./interfaces/sign-up.interface";
@@ -6,6 +6,7 @@ import { SignInDto } from "./dto/sign-in.dto";
 import { ISignInReq } from "./interfaces/sign-in.interface";
 import { RefreshTokenDto } from "./dto/refresh-token.dto";
 import { ApiTags } from "@nestjs/swagger";
+import { Public } from "src/decorators/public.decorator";
 
 @ApiTags("auth")
 @Controller("auth")
@@ -26,6 +27,7 @@ export class AuthController {
 
     }
 
+    @Public()
     @Post("sign-in")
     signIn(@Body() body: SignInDto) {
 
@@ -38,7 +40,9 @@ export class AuthController {
     }
 
     @Post("log-out")
-    logOut() {
+    logOut(@Request() req) {
+
+        console.log(req.user);
 
         return this.authService.logOut({});
 
