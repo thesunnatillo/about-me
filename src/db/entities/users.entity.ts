@@ -18,7 +18,7 @@ export class UsersEntity extends GeneralEntity {
     @Column("varchar", { name: "password" })
     password: string;;
 
-    @Column("varchar", { name: "role" })
+    @Column("varchar", { name: "role", default: RoleType.GUEST })
     role: RoleType;
 
     @OneToMany(() => PostsEntity, entity => entity.user)

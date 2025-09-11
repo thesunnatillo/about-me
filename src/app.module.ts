@@ -9,12 +9,13 @@ import dbConfig from './configs/db.config';
 import { DataSourceOptions } from 'typeorm';
 import { UsersModule } from './modules/users/users.module';
 import { PostsEntity } from './db/entities/posts.entity';
+import jwtConfig from './configs/jwt.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [dbConfig]
+      load: [dbConfig, jwtConfig]
     }),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => ({
